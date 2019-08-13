@@ -34,7 +34,7 @@ Simplest way to install is just
 go get github.com/wierdbytes/stf
 ```
 
-Also you can download it from releases page
+Also you can download it from [releases](https://github.com/wierdbytes/stf/releases) page
 
 ### Examples
 ```
