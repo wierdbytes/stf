@@ -139,7 +139,6 @@ func main() {
 	if bucketSize%numBytes != 0 {
 		fmt.Printf("ERROR: batch must be divided by the byts without remainder\n")
 	}
-	// TODO: check that numBytes fits bucketSize
 
 	if outFile == "" {
 		outFile = inFile + ".sorted"
