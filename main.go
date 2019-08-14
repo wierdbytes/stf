@@ -101,10 +101,6 @@ func (b *bucket) Minimum() int {
 	return ret
 }
 
-func (b *bucket) RemoveElement(i int) {
-
-}
-
 func (b *bucket) Element(i int) []byte {
 	inSlice := i * b.Size
 	return b.Data[inSlice : inSlice+b.Size]
