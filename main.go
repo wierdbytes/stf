@@ -93,7 +93,7 @@ func (b *bucket) Swap(i, j int) {
 // Minimum returns index of element with minimum value
 func (b *bucket) Minimum() int {
 	var ret int
-	for i := 0; i < b.c; i++ {
+	for i := 0; i < b.c/b.Size; i++ {
 		if b.Less(i, ret) {
 			ret = i
 		}
@@ -189,7 +189,7 @@ func main() {
 		Size:       numBytes,
 		Signed:     !unsigned, // TODO: fix inversion
 		BucketSize: len(files) * numBytes,
-		c:          len(files),
+		c:          len(files) * numBytes,
 	}
 	fHandlers = make([]*os.File, len(files))
 	for i, filename := range files {
@@ -220,13 +220,16 @@ func main() {
 			element := index * finalBucket.Size
 			copy(finalBucket.Data[element:element+finalBucket.Size], scanners[index].Bytes())
 		} else {
-			finalBucket.c--
+			finalBucket.c -= finalBucket.Size
+			if finalBucket.Len() <= 0 {
+				break
+			}
 			diff := 0
-			for i := range scanners {
+			for i := 0; i < finalBucket.Len(); i++ {
 				if index == i {
 					diff++
 				}
-				if i < finalBucket.c {
+				if i < finalBucket.Len() {
 					scanners[i] = scanners[i+diff]
 					newElStart := i * finalBucket.Size
 					newElEnd := newElStart + finalBucket.Size
@@ -234,9 +237,6 @@ func main() {
 					copy(finalBucket.Data[newElStart:newElEnd], finalBucket.Data[newElStart+diffEl:newElEnd+diffEl])
 				}
 			}
-		}
-		if finalBucket.c <= 0 {
-			break
 		}
 	}
 	for _, handler := range fHandlers {
